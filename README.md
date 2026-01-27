@@ -1,4 +1,4 @@
-# ddRADseq data processing on MetaCentrum using [dDocent](https://ddocent.com/)  
+# ddRADseq data processing on [MetaCentrum](https://metavo.metacentrum.cz/en/index.html) using [dDocent](https://ddocent.com/)  
 ## 1. demultiplexing + trimming (script [`demultiplex_stacksMETA.sh`](demultiplex_stacksMETA.sh))  
 using command `process_radtags` from [STACKS](https://catchenlab.life.illinois.edu/stacks/)  
 `process_radtags -1 ${file1} -2 ${file2} -b ${barcodes} -o demultiplexed --renz_1 ecoRI --renz_2 mspI -c –q`  
