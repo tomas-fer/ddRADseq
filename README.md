@@ -18,14 +18,28 @@ see [config.file](config.file)
 on `TotalRawSNPs.vcf` using [`vcfallelicprimitives`](https://github.com/vcflib/vcflib), [`vcftools`](https://vcftools.github.io/index.html) and [`vcffilter`](https://github.com/vcflib/vcflib)  
 
 ## 5. running sNMF ([LEA](https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.12382)) as implemented in [SambaR](https://github.com/mennodejong1986/SambaR)  
-create PED/MAP and RAW/BIM files using [`vcftools`](https://vcftools.github.io/index.html) and [`plink`](https://www.cog-genomics.org/plink/)  
+create PED/MAP and RAW/BIM files from filtered VCF using [`vcftools`](https://vcftools.github.io/index.html) and [`plink`](https://www.cog-genomics.org/plink/)  
+`name="{your own prefix}"`  
+`vcftools --gzvcf ${name}.vcf.gz --plink --out ${name}`  
+`#correct PED file - 1st column should contain pop name (taken from the full name 'popname_samplename' in the second column)`  
+`cut -f1 ${name}.ped | cut -f1 -d'_' > pops`  
+`cut -f2- ${name}.ped > rest`  
+`paste pops rest > ${name}.ped`  
+`rm pops rest`  
+`#calculate depth`  
+`vcftools --gzvcf ${name}.vcf.gz --depth`  
+`vcftools --gzvcf ${name}.vcf.gz --site-mean-depth`  
+`#Convert PED/MAP to RAW/BIM`  
+`plink --file ${name} --chr-set 95 --allow-extra-chr --make-bed --recode A --out ${name}`  
+
 Run in R:  
 `source("SAMBAR_v1.10.txt")`  
 `getpackages()`  
+`name="{your own prefix}"`  
 `importdata(inputprefix=name)`  
 `#filter data, i.e. here retain all SNPs (already filtered)`  
-`filterdata(indmiss=1,snpmiss=1,min_mac=0,dohefilter=FALSE,snpdepthfilter=FALSE,min_spacing=0)`  
-`findstructure(onlyLEA=TRUE,Kmax=7)`  
+`filterdata(indmiss=1, snpmiss=1, min_mac=0, dohefilter=FALSE, snpdepthfilter=FALSE, min_spacing=0)`  
+`findstructure(onlyLEA=TRUE, Kmax=7)`  
 
 ## 6. draw results as geographic maps with piecharts  
 (scripts [`LEAmakePieMaps.sh`](LEAmakePieMaps.sh) and [`plotLEA_maps.R`](plotLEA_maps.R))  
