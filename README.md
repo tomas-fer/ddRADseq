@@ -17,7 +17,7 @@ see [config.file](config.file)
 ## 4. SNP filtering (script [`SNPfilter_dDocentMETA.sh`](SNPfilter_dDocentMETA.sh))  
 on `TotalRawSNPs.vcf` using [`vcfallelicprimitives`](https://github.com/vcflib/vcflib), [`vcftools`](https://vcftools.github.io/index.html) and [`vcffilter`](https://github.com/vcflib/vcflib)  
 
-## 5. running sNMF (LEA) as implemented in [SambaR](https://github.com/mennodejong1986/SambaR)  
+## 5. running sNMF ([LEA](https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.12382)) as implemented in [SambaR](https://github.com/mennodejong1986/SambaR)  
 create PED/MAP and RAW/BIM files using [`vcftools`](https://vcftools.github.io/index.html) and [`plink`](https://www.cog-genomics.org/plink/)  
 Run in R:  
 `source("SAMBAR_v1.10.txt")`  
