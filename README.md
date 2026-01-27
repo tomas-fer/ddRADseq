@@ -3,7 +3,7 @@
 using command `process_radtags` from [STACKS](https://catchenlab.life.illinois.edu/stacks/)  
 `process_radtags -1 ${file1} -2 ${file2} -b ${barcodes} -o demultiplexed --renz_1 ecoRI --renz_2 mspI -c –q`  
 and [Trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic)  
-`java -jar Trimmomatic-0.39/trimmomatic-0.39.jar SE -threads 6 -phred33 demultiplexed /${file}.fq.gz trimmed/${file}.trimmed.fq.gz HEADCROP:10`  
+`java -jar Trimmomatic-0.39/trimmomatic-0.39.jar SE -threads 6 -phred33 demultiplexed/${file}.fq.gz trimmed/${file}.trimmed.fq.gz HEADCROP:10`  
 
 ## 2. subsample to, e.g., 1,000,000 read pairs (script [`dDocentMETA_rawreadSubsampling.sh`](dDocentMETA_rawreadSubsampling.sh))  
 using [seqtk](https://github.com/lh3/seqtk) command  
