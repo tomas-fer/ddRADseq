@@ -4,14 +4,14 @@
 #tomas.fer@natur.cuni.cz
 
 #REQUIREMENTS
-#GhostSctipt (gs)
+#GhostScript (gs)
 #R + packages: maps, plotrix, RColorBrewer
 #pdfbox (automatically downloaded from Apache)
 
 #takes output of LEAqmatrix for K=2 to k (defined below)
-#adds localities column to the LEA output (requires localitiesCoor.txt with 3 columns: locID (the same as in qmatrix), x, y
-#uses plotLEA_maps.R to plot the piecharts on the map (works well with single data point per locality)
-#combines all PDFs to a single one using 'pdfbox'
+#adds localities column to the LEA output (requires localitiesCoor.txt with 3 columns: locID (the same as in qmatrix), x, y)
+#uses plotLEA_maps.R to plot the piecharts on the map (works well with a single data point per locality)
+#combines all PDFs to a single file using 'pdfbox'
 
 #define max K
 k=7
@@ -46,9 +46,9 @@ for i in $(seq 2 $k); do
 	mv K${i}crop.pdf K${i}.pdf
 	rm out
 done
-#merge all PDF into a single one
+#merge all PDFs into a single file
 echo "Merging PDFs"
-#Check newest PDFbox version and silently download it
+#Check the newest PDFbox version and silently download it
 pdfboxver=$(wget -q -O- https://downloads.apache.org/pdfbox/ | grep "2\.0\." | cut -d'"' -f6 | sed 's/.$//')
 #download the newest version and rename
 wget -q https://downloads.apache.org/pdfbox/${pdfboxver}/pdfbox-app-${pdfboxver}.jar
