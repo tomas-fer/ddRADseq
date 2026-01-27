@@ -1,6 +1,6 @@
 # ddRADseq data processing on [MetaCentrum](https://metavo.metacentrum.cz/en/index.html) using [dDocent](https://ddocent.com/)  
 ## 1. demultiplexing + trimming (script [`demultiplex_stacksMETA.sh`](demultiplex_stacksMETA.sh))  
-using command `process_radtags` from [STACKS](https://catchenlab.life.illinois.edu/stacks/)  
+using command `process_radtags` from [STACKS](https://catchenlab.life.illinois.edu/stacks/) (example of barcode [file](barcodesExample.txt))  
 `process_radtags -1 ${file1} -2 ${file2} -b ${barcodes} -o demultiplexed --renz_1 ecoRI --renz_2 mspI -c –q`  
 and [Trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic)  
 `java -jar Trimmomatic-0.39/trimmomatic-0.39.jar SE -threads 6 -phred33 demultiplexed/${file}.fq.gz trimmed/${file}.trimmed.fq.gz HEADCROP:10`  
