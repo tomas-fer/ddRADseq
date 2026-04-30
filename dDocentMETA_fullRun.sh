@@ -8,11 +8,11 @@
 #--------------------------------------------------------------------------------------------
 
 #Run dDocent with all samples (after optimizing parameters - similarity, k1, k2)
-
+#config.file MUST be in DATADIR !!!
 server=brno12-cerit
 cores=$TORQUE_RESC_TOTAL_PROCS
-#define dir with fq.gz files
-DATADIR="/storage/brno12-cerit/home/tomasfer/louky/TACR/Galium2025/fastq/demultiplexed/subsample1mil"
+#define dir with fq.gz files (after cutadapt and subsampling, e.g. subsamp1000000)
+DATADIR="/storage/brno12-cerit/home/tomasfer/louky/TACR/Galium2025/subsamp1000000"
 workdir=results
 #workdir=$(sed "s/.*\///" <<< ${DATADIR})
 #move to SCRATCHDIR
@@ -20,25 +20,26 @@ cd $SCRATCHDIR
 
 #copy data from datadir
 mkdir ${workdir}
+cd ${workdir}
 cp ${DATADIR}/*.gz .
 
-#run cutadapt first (remove bases of restriction sites) and save the modified files to 'workdir'
-#activate cutadapt
-mamba activate cutadapt-5.2
-#this works for Walter's coding scheme
-#indnames=$(find . -type f | grep -Eo '[A-Z]{3}\.[A-Z]{3}.*[A-Z][0-9]{2}' | sort | uniq)
-#this works for our samples
-indnames=$(ls *.fq.gz | cut -d'.' -f1)
-for indname in $indnames; do
-	fastq1="./${indname}.R.fq.gz"
-	fastq2="./${indname}.F.fq.gz"
-	# --cores=0 auto-detects number of available cores
-	cutadapt --cores=0 --cut 3 -U 5 --output ${workdir}/${fastq1} --paired-output ${workdir}/${fastq2} ${fastq1} ${fastq2}
-done
-mamba deactivate
+#cutadapt now included in the first script!
+# #run cutadapt first (remove bases of restriction sites) and save the modified files to 'workdir'
+# #activate cutadapt
+# mamba activate cutadapt-5.2
+# #this works for Walter's coding scheme
+# #indnames=$(find . -type f | grep -Eo '[A-Z]{3}\.[A-Z]{3}.*[A-Z][0-9]{2}' | sort | uniq)
+# #this works for our samples
+# indnames=$(ls *.fq.gz | cut -d'.' -f1)
+# for indname in $indnames; do
+	# fastq1="./${indname}.R.fq.gz"
+	# fastq2="./${indname}.F.fq.gz"
+	# # --cores=0 auto-detects number of available cores
+	# cutadapt --cores=0 --cut 3 -U 5 --output ${workdir}/${fastq1} --paired-output ${workdir}/${fastq2} ${fastq1} ${fastq2}
+# done
+# mamba deactivate
 
 #run dDocent
-cd ${workdir}
 cp ${DATADIR}/config.file .
 ls *.gz > inputgzlist
 #create dDocent instalation with mamba (just once, then comment)
