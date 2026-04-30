@@ -2,8 +2,8 @@
 ## 1. demultiplexing + trimming (script [`demultiplex_stacksMETA.sh`](demultiplex_stacksMETA.sh))  
 using command `process_radtags` from [STACKS](https://catchenlab.life.illinois.edu/stacks/) (example of barcode [file](barcodesExample.txt))  
 `process_radtags -1 ${file1} -2 ${file2} -b ${barcodes} -o demultiplexed --renz_1 ecoRI --renz_2 mspI -c –q`  
-and [Trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic)  
-`java -jar Trimmomatic-0.39/trimmomatic-0.39.jar SE -threads 6 -phred33 demultiplexed/${file}.fq.gz trimmed/${file}.trimmed.fq.gz HEADCROP:10`  
+and [cutadapt](https://github.com/marcelm/cutadapt)  
+`cutadapt --cores=$TORQUE_RESC_TOTAL_PROCS --cut 3 -U 5 --output "cutadapt/${fastq1}" --paired-output "cutadapt/${fastq2}" $fastq1 $fastq2`  
 
 ## 2. subsample to, e.g., 1,000,000 read pairs (script [`dDocentMETA_rawreadSubsampling.sh`](dDocentMETA_rawreadSubsampling.sh))  
 using [seqtk](https://github.com/lh3/seqtk) command  
