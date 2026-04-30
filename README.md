@@ -7,7 +7,7 @@ and [cutadapt](https://github.com/marcelm/cutadapt)
 
 ## 2. subsample to, e.g., 1,000,000 read pairs (script [`dDocentMETA_rawreadSubsampling.sh`](dDocentMETA_rawreadSubsampling.sh))  
 using [seqtk](https://github.com/lh3/seqtk) command  
-`seqtk sample -s100 ${file}.fq.gz ${subsam} > ${subsam}/${file}.fq`  
+`seqtk sample -s100 ${file}.fq.gz ${subsamp} > ${subsamp}/${file}.fq`  
 
 ## 3. run dDocent (script [`dDocentMETA_fullRun.sh`](dDocentMETA_fullRun.sh))  
 using command  
