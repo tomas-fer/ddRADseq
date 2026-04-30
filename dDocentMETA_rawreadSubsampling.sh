@@ -11,24 +11,24 @@
 
 server=brno12-cerit
 cores=$TORQUE_RESC_TOTAL_PROCS
-#define dir with demultiplexed files (*.{1,2}.fq.gz)
-DATADIR="/storage/brno12-cerit/home/${LOGNAME}/louky/TACR/Galium2025/fastq/demultiplexed"
+#define dir with demultiplexed and cutadapted files (*.{1,2}.fq.gz)
+DATADIR="/storage/brno12-cerit/home/${LOGNAME}/louky/TACR/Galium2025/cutadapt"
 #subsample to nr. read pairs
-subsam=1000000
+subsamp=1000000
 
 #subsample using seqtk
-echo -e "Subsampling reads to $subsam..."
+echo -e "Subsampling reads to $subsamp..."
 cd ${DATADIR}
-mkdir $subsam
+mkdir ../subsamp${subsamp}
 for file in $(ls *.fq.gz | cut -d'.' -f1,2); do
 	echo ${file}
-	seqtk sample -s100 ${file}.fq.gz ${subsam} > ${subsam}/${file}.fq
-	gzip ${subsam}/${file}.fq
+	seqtk sample -s100 ${file}.fq.gz ${subsamp} > ../subsamp${subsamp}/${file}.fq
+	gzip ../subsamp${subsamp}/${file}.fq
 done
 
 #rename samples to follow dDocent naming scheme (from .{1,2}.fq.gz to .{F,R}.fq.gz
 echo -e "Renaming samples to {F,R}..."
-cd $subsam
+cd ../subsamp${subsamp}
 indnames=$(ls *.fq.gz | cut -d'.' -f1)
 for indname in $indnames; do
 	mv ${indname}.1.fq.gz ${indname}.F.fq.gz
