@@ -56,4 +56,3 @@ echo "Copying cutadapt data back..."
 cp -r cutadapt ${folder}
 
 echo "Done..."
-exit
