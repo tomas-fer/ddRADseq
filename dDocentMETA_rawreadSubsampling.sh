@@ -17,6 +17,7 @@ DATADIR="/storage/brno12-cerit/home/${LOGNAME}/louky/TACR/Galium2025/cutadapt"
 subsamp=1000000
 
 #subsample using seqtk
+module add seqtk
 echo -e "Subsampling reads to $subsamp..."
 cd ${DATADIR}
 mkdir ../subsamp${subsamp}
