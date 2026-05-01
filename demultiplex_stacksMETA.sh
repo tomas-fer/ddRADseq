@@ -33,22 +33,25 @@ cp ${folder}/${barcodes} .
 echo "Demultiplexing (process_radtags)..."
 mkdir demultiplexed
 #process_radtags -1 ${file1} -2 ${file2} -b ${barcodes} -o demultiplexed --renz_1 ecoRI --renz_2 mspI -c -q
-process_radtags --paired -1 ${file1} -2 ${file2} -o demultiplexed -i gzfastq -y gzfastq -b ${barcodes} --barcode_dist_1 2 --barcode_dist_2 2 --inline_index --renz_1 'ecoRI' --renz_2 'mspI' --disable_rad_check --retain_header
+process_radtags -1 ${file1} -2 ${file2} -b ${barcodes} -o demultiplexed --renz_1 ecoRI --renz_2 mspI
+#process_radtags --paired -1 ${file1} -2 ${file2} -o demultiplexed -i gzfastq -y gzfastq -b ${barcodes} --barcode_dist_1 2 --barcode_dist_2 2 --inline_index --renz_1 'ecoRI' --renz_2 'mspI' --disable_rad_check --retain_header
 
 
 echo "Copying demultiplexed data back..."
 cp -r demultiplexed ${folder}
 
 echo "Cuting out first 3 or 5 bases (cutadapt)..."
+module unload stacks/2.68-gcc-10.2.1-hqulvik
+module unload python36-modules-gcc
 module add py-cutadapt
 cd demultiplexed
 mkdir cutadapt
-indnames=$(ls *1.fq.gz | sed 's/\.1\.fq\.gz//')
+indnames=$(ls *1.fq.gz | sed 's/\.1\.fq\.gz//' | grep -v "rem")
 
 #CORRECT version is cutadapt --cut 3 -U 5 !!!!
 for i in $indnames; do
-	fastq1="./${i}.R.fq.gz"
-	fastq2="./${i}.F.fq.gz"
+	fastq1="./${i}.1.fq.gz"
+	fastq2="./${i}.2.fq.gz"
 	cutadapt --cores=$TORQUE_RESC_TOTAL_PROCS --cut 3 -U 5 --output "cutadapt/${fastq1}" --paired-output "cutadapt/${fastq2}" $fastq1 $fastq2
 done
 
