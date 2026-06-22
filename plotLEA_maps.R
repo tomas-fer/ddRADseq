@@ -20,8 +20,10 @@ scaling_factor <- 0.15
 my_radii <- (totals / max_total) * scaling_factor
 pie_colors <- RColorBrewer::brewer.pal(K, "Set2")
 pdf(paste0("K", clusters, ".pdf"))
-#plot(my_data$x, my_data$y, type = "n", xlim = c(min(my_data$x) - 1, max(my_data$x) + 1), ylim = c(48,53), xlab="", ylab="", main=paste0("K ", K))
+#plot(my_data$x, my_data$y,type = "n",xlim = c(min(my_data$x) - 1, max(my_data$x) + 1),ylim = c(48,53),xlab="",ylab="",main=paste0("K ",K))
 map(database= "world", ylim = c(min(my_data$y) - 1, max(my_data$y) + 1), xlim = c(min(my_data$x) - 1, max(my_data$x) + 1), col="grey80", fill=F, lwd=2)
+
+par(lwd = 0.4)
 
 for (i in 1:nrow(my_data)) {
   # Get the data for the current pie
