@@ -3,18 +3,22 @@
 #PBS -l walltime=24:0:0
 #PBS -l select=1:ncpus=4:mem=4gb:scratch_local=2gb
 #PBS -j oe
-#PBS -N RpackagesSambaR_setup
+#PBS -N runLEAonVCF
 #PBS -m abe
 
 #define variables
 server=brno12-cerit
 datafolder=louky/TACR/Lychnis2026/fastq/subsamp1000000/results/filtered.vcf
 species=LYC.FLO
+fullname="Lychnis flos-cuculi"
 name=${species}.SNPs.g66mac3minDP3birl15rm75.F4.meanDP10maxDP1000maf05thin.recode
+K=10
 
 echo "This runs LEA in SambaR for:"
-echo "Species: $species"
+echo "Species full name: $fullname"
+echo "Species code: $species"
 echo "File: ${name}.vcf"
+echo "K: ${K}"
 echo -e "Folder: /storage/${server}/home/${LOGNAME}/${datafolder}\n"
 
 cd $SCRATCHDIR
@@ -59,7 +63,7 @@ vcftools --gzvcf ${name}.vcf.gz --site-mean-depth
 
 #Run LEA in SambaR
 echo -e "\nRunning SambaR...\n"
-R --slave -f runLEAinSambaR.R $name
+R --slave -f runLEAinSambaR.R $name $K
 
 #Plot maps from LEA results
 echo -e "\nPlotting maps...\n"
@@ -69,7 +73,35 @@ wget https://raw.githubusercontent.com/tomas-fer/ddRADseq/refs/heads/main/LEAmak
 wget https://raw.githubusercontent.com/tomas-fer/ddRADseq/refs/heads/main/plotLEA_maps.R
 chmod +x LEAmakePieMaps.sh
 chmod +x plotLEA_maps.R
-./LEAmakePieMaps.sh
+./LEAmakePieMaps.sh $K $species
+
+#Plot ancestry visualization
+echo -e "\nPlotting ancestry maps...\n"
+cp /storage/${server}/home/${LOGNAME}/RpackagesSambaR/POPSutilitiesCorrectedConstraines.r .
+cp /storage/${server}/home/${LOGNAME}/RpackagesSambaR/Europe.asc .
+#Modify file with locality coordinates
+cut -f2,3 localitiesCoor.txt | tail -n +2 > coordinates.txt
+for i in $(seq 2 $K); do
+	cut -f2- Structureplot.LEAqmatrix_K${i}.txt > k${i}.Q
+done
+echo ${fullname} > fullname
+R --slave -f PlotMapFromQmatrix.R $K
+#Merge all PDFs into a single file
+echo -e"\nMerging PDFs\n"
+#Check if there is pdfbox.jar available
+if [ -f "./pdfbox.jar" ]; then
+	echo "PDFbox found..."
+else
+	echo "Downloading PDFbox..."
+	#Check the newest PDFbox version and silently download it
+	pdfboxver=$(wget -q -O- https://downloads.apache.org/pdfbox/ | grep "2\.0\." | cut -d'"' -f6 | sed 's/.$//')
+	#download the newest version and rename
+	wget -q https://downloads.apache.org/pdfbox/${pdfboxver}/pdfbox-app-${pdfboxver}.jar
+	mv pdfbox-app-${pdfboxver}.jar pdfbox.jar
+fi
+#merge K*.pdf to a single PDF
+java -jar pdfbox.jar PDFMerger K*_regions.pdf ${species}_K2-${k}_regions.pdf
+
 cd ../..
 
 #Copy results home
