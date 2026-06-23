@@ -14,7 +14,7 @@
 #combines all PDFs to a single file using 'pdfbox'
 
 #define max K
-k=7
+k=${1}
 for i in $(seq 2 $k); do
 	echo "Plotting K${i}"
 	#join LEAqmatrix output file with coordinate file (both have sample name as a first column)
@@ -54,5 +54,5 @@ pdfboxver=$(wget -q -O- https://downloads.apache.org/pdfbox/ | grep "2\.0\." | c
 wget -q https://downloads.apache.org/pdfbox/${pdfboxver}/pdfbox-app-${pdfboxver}.jar
 mv pdfbox-app-${pdfboxver}.jar pdfbox.jar
 #merge K*.pdf to a single PDF
-java -jar pdfbox.jar PDFMerger K*.pdf K2-${k}.pdf
+java -jar pdfbox.jar PDFMerger K*.pdf ${2}_K2-${k}.pdf
 
