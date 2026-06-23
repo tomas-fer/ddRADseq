@@ -1,0 +1,10 @@
+args <- commandArgs()
+name <- args[5]
+K <- as.number(args[6])
+print(paste("Sample name is: ", name))
+print(paste("K: ", K))
+source('SAMBAR_v1.10.txt')
+getpackages()
+importdata(inputprefix=name)
+filterdata(indmiss=1, snpmiss=1, min_mac=0, dohefilter=FALSE, snpdepthfilter=FALSE, min_spacing=0)
+findstructure(onlyLEA=TRUE, Kmax=K)
